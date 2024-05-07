@@ -12,6 +12,7 @@ class Role extends Model
     public const ADMIN = 'admin';
     public const ASSESSOR = 'asesor';
     public const ASSESSEE = 'asesi';
+    public const PROVINCE = 'provinsi';
 
     use HasFactory;
     use Traits\HasUuidPrimaryKey;
@@ -61,5 +62,10 @@ class Role extends Model
     public function isAssessee()
     {
         return $this->name === static::ASSESSEE;
+    }
+
+    public function isProvince()
+    {
+        return $this->name === static::PROVINCE;
     }
 }

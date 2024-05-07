@@ -56,10 +56,18 @@ class AccreditationController extends Controller
             throw new AuthorizationException();
         }
 
-        $accreditations = Accreditation::with('institution')->orderBy('created_at', 'desc');
-        if ($user->isAdmin()) {
+        $accreditations = Accreditation::with(['institution','evaluationAssignments.assessors'])->orderBy('created_at', 'desc');
+        if($user->isSuperAdmin()){
             $accreditations = $accreditations->get();
-        } else {
+        } else if($user->isAdmin()){
+            $accreditations = $accreditations->whereHas('institution', function($q) use ($user){
+                $q->where('region_id', '=', $user["region_id"]);
+            })->get();
+        } else if($user->isProvince()){
+            $accreditations = $accreditations->whereHas('institution', function($q) use ($user){
+                $q->where('province_id', '=', $user["province_id"]);
+            })->get();
+        }else {
             $accreditations = $accreditations->where('user_id', $user->id)->get();
         }
 
