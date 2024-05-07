@@ -23,6 +23,8 @@ class AccreditationResource extends Resource
             'accredited_at' => $this->accredited_at,
             'appealed_at' => $this->appealed_at,
             'user_id' => $this->user_id,
+            'certificate_file' => $this->certificate_file,
+            'recommendation_file' => $this->recommendation_file,
             'certificate_status' => $this->certificate_status,
             'certificate_sent_at' => $this->certificate_sent_at,
             'meeting_date' => $this->meeting_date,

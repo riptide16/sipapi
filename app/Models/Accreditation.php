@@ -37,6 +37,8 @@ class Accreditation extends Model
         'notes',
         'status',
         'type',
+        'certificate_file',
+        'recommendation_file',
     ];
 
     protected $filterable = [

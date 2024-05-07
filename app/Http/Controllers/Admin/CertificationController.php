@@ -20,7 +20,23 @@ class CertificationController extends Controller
      */
     public function index(Request $request)
     {
-        $accreditations = Accreditation::with(['institution', 'evaluation'])->accredited()->get();
+        $user = $request->user();
+        if ($user->isAssessee()){
+            $accreditations = Accreditation::with(['institution', 'evaluation'])->where('user_id', $user->id)->accredited()->get();
+        }
+        else if($user->isSuperAdmin()){
+            $accreditations = Accreditation::with(['institution', 'evaluation'])->accredited()->get();
+        }
+        else if($user->isProvince()){
+            $accreditations = Accreditation::with(['institution', 'evaluation'])->whereHas('institution', function($q) use ($user){
+                $q->where('province_id', '=', $user["province_id"]);
+            })->accredited()->get();        
+        }
+        else {
+            $accreditations = Accreditation::with(['institution', 'evaluation'])->whereHas('institution', function($q) use ($user){
+                $q->where('region_id', '=', $user["region_id"]);
+            })->accredited()->get();
+        }
 
         return new AccreditationCollection($accreditations);
     }
