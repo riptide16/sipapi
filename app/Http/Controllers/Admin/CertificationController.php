@@ -55,15 +55,46 @@ class CertificationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $accreditationId)
+    public function update(Request $request)
     {
-        $accreditation = Accreditation::accredited()->findOrFail($accreditationId);
+        
+        $accreditation = Accreditation::accredited()->findOrFail($request->get('accreditation_id'));
+
         $request->validate([
             'certificate_status' => 'required|in:'.implode(',', Accreditation::certificateStatusList()),
             'certificate_sent_at' => 'required_if:certificate_status,dikirim|date|date_format:Y-m-d',
+            'certificate_file' => 'nullable|file|mimes:pdf|max:2048',
+            'recommendation_file' => 'nullable|file|mimes:pdf|max:2048',
         ]);
+
+        $data = $request->all();
+        
         $accreditation->certificate_status = $request->get('certificate_status');
         $accreditation->certificate_sent_at = $request->get('certificate_sent_at');
+
+        // Simpan file sertifikat
+        if ($request->hasFile('certificate_file')) {
+            
+            $data['certificate_file'] = $request->file('certificate_file')
+                                               ->store(
+                                                  "certifications/{$accreditation["id"]}",
+                                                  'local'
+                                               );
+
+            $accreditation->certificate_file = $data['certificate_file'] ?? $accreditation->certification_file;
+        }
+
+        // Simpan file rekomendasi akreditasi
+        if ($request->hasFile('recommendation_file')) {
+            $data['recommendation_file'] = $request->file('recommendation_file')
+                                               ->store(
+                                                  "recommendations/{$accreditation["id"]}",
+                                                  'local'
+                                               );
+
+            $accreditation->recommendation_file = $data['recommendation_file'] ?? $accreditation->recommendation_file;
+        }
+
         $accreditation->save();
 
         if ($accreditation->certificate_status == Accreditation::CERT_STATUS_SENT && $request->has('certificate_sent_at')) {
