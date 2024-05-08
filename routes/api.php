@@ -182,8 +182,11 @@ Route::prefix('v1')->group(function () {
                  ->middleware('permit');
         });
 
-        Route::apiResource('certifications', Admin\CertificationController::class, ['only' => ['index', 'show', 'update']]);
-
+        Route::apiResource('certifications', Admin\CertificationController::class, ['only' => ['index', 'show']]);
+        Route::prefix('certifications')->name('certifications.')->group(function () {
+          Route::post('/', [Admin\CertificationController::class, 'update'])->name('certification.update');
+        });
+        
         Route::prefix('province_region')->name('province_region.')->group(function () {
             Route::get('/region/{region_id}', [Admin\ProvinceRegionController::class, 'index'])
                ->name('available');
