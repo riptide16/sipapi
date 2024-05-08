@@ -16,6 +16,10 @@ trait HasCategory
             'SMA SMK MA',
             'Perguruan Tinggi',
             'Khusus',
+            'PAUD',
+            'SLB',
+            'Lembaga NonPemerintah',
+            'Rumah Ibadah',
         ];
     }
 }
