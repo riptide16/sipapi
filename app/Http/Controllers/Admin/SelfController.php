@@ -191,9 +191,16 @@ class SelfController extends Controller
                                         ->take(1)
                                         ->get()
                                         ->collect();
+            $gdrive = InstrumentComponent::where('category', $user->institution->category)
+                                        ->where('type', 'main')
+                                        ->select('*')
+                                        ->addSelect(\DB::raw("'gdrive' as action_type"))
+					                    ->take(1)
+                                        ->get()
+                                        ->collect();
 
             // Merge both type
-            $merged = $choice->merge($proof)->merge($video);
+            $merged = $choice->merge($proof)->merge($gdrive)->merge($video);
         } else {
             $merged = InstrumentComponent::where('category', $user->institution->category)
                                         ->where('type', 'main')

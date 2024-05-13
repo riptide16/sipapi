@@ -132,7 +132,14 @@ class AccreditationController extends Controller
                 $data['main_component_id'] = $component->id;
                 $data['aspect'] = $component->name;
                 $data['url'] = $content['url'];
-            } else {
+            } elseif ($content['type'] == 'gdrive') {
+                $component = InstrumentComponent::find($content['instrument_component_id'])->ancestor();
+                $data['aspectable_type'] = InstrumentComponent::class;
+                $data['aspectable_id'] = $component->id;
+                $data['main_component_id'] = $component->id;
+                $data['aspect'] = $component->name;
+                $data['url'] = $content['url'];
+            }  else {
                 $aspect = InstrumentAspect::find($content['instrument_aspect_id']);
                 $data['aspect'] = $aspect->aspect;
                 $data['aspectable_type'] = InstrumentAspect::class;

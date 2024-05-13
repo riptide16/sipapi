@@ -14,6 +14,7 @@ class AccreditationContent extends Model
     public const TYPE_CHOICE = 'choice';
     public const TYPE_PROOF = 'proof';
     public const TYPE_VIDEO = 'video';
+    public const TYPE_GDRIVE = 'gdrive';
 
     protected $fillable = [
         'accreditation_id',
@@ -35,6 +36,7 @@ class AccreditationContent extends Model
             static::TYPE_CHOICE,
             static::TYPE_PROOF,
             static::TYPE_VIDEO,
+            static::TYPE_GDRIVE,
         ];
     }
 
