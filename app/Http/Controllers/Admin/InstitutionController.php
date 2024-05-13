@@ -31,7 +31,7 @@ class InstitutionController extends Controller
         if (is_null($institution->validated_at)) {
             $this->notifyToValidate($institution);
         }
-
+        
         return new InstitutionResource($institution);
     }
 
@@ -68,6 +68,7 @@ class InstitutionController extends Controller
         } elseif($request->datatype == 'request') {
             $institution = InstitutionRequest::with(['user', 'region', 'province', 'city', 'subdistrict', 'village'])->findOrFail($id);
         }
+        
         return new InstitutionResource($institution);
     }
 

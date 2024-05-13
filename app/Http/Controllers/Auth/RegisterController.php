@@ -21,6 +21,7 @@ class RegisterController extends Controller
                 'role_id' => $role->id
             ],
         ));
+        return $user;
 
         event(new Registered($user));
 

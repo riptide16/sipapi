@@ -132,7 +132,14 @@ class AccreditationController extends Controller
                 $data['main_component_id'] = $component->id;
                 $data['aspect'] = $component->name;
                 $data['url'] = $content['url'];
-            } else {
+            } elseif ($content['type'] == 'gdrive') {
+                $component = InstrumentComponent::find($content['instrument_component_id'])->ancestor();
+                $data['aspectable_type'] = InstrumentComponent::class;
+                $data['aspectable_id'] = $component->id;
+                $data['main_component_id'] = $component->id;
+                $data['aspect'] = $component->name;
+                $data['url'] = $content['url'];
+            }  else {
                 $aspect = InstrumentAspect::find($content['instrument_aspect_id']);
                 $data['aspect'] = $aspect->aspect;
                 $data['aspectable_type'] = InstrumentAspect::class;
@@ -202,6 +209,7 @@ class AccreditationController extends Controller
         if ($request->has('with')) {
             $with = array_merge($with, explode(',', $request->get('with')));
         }
+        
         $accreditation = Accreditation::with($with);
         if ($user->isAssessee()) {
             $accreditation = $accreditation->where('user_id', $user->id)->findOrFail($id);
@@ -209,7 +217,7 @@ class AccreditationController extends Controller
             $accreditation = $accreditation->findOrFail($id);
         }
         $accreditation->loadResult();
-
+        
         return new AccreditationResource($accreditation);
     }
 
@@ -256,6 +264,7 @@ class AccreditationController extends Controller
         $user = $request->user();
 
         $accreditation = Accreditation::with('institution');
+
         if ($user->isAssessee()) {
             $accreditation->where('user_id', $user->id);
         }
@@ -271,12 +280,14 @@ class AccreditationController extends Controller
                                          ->addSelect(\DB::raw("'choice' as action_type"))
                                          ->get()
                                          ->collect();
+                                        
             $proof = InstrumentComponent::where('category', $accreditation->institution->category)
                                         ->where('type', 'main')
                                         ->select('*')
                                         ->addSelect(\DB::raw("'proof' as action_type"))
                                         ->get()
                                         ->collect();
+            return $proof;
             $video = InstrumentComponent::where('category', $accreditation->institution->category)
                                         ->where('type', 'main')
                                         ->select('*')
@@ -289,13 +300,13 @@ class AccreditationController extends Controller
             $merged = $choice->merge($proof)->merge($video);
         } else {
             $merged = InstrumentComponent::where('category', $accreditation->institution->category)
-                                        ->where('type', 'main')
-                                        ->select('*')
-                                        ->addSelect(\DB::raw("'{$request->type}' as action_type"));
-
+            ->where('type', 'main')
+            ->select('*')
+            ->addSelect(\DB::raw("'{$request->type}' as action_type"));
+            
             if ($page <= -1) {
                 $merged = $merged->assesseeForms($request->get('type'), $accreditation->institution->category, $accreditation->id)
-                                 ->get();
+                ->get();
             } else {
                 $merged = $merged->get()->collect();
             }
@@ -304,7 +315,7 @@ class AccreditationController extends Controller
         if ($page <= -1) {
             return new InstrumentComponentCollection($merged);
         }
-
+        
         // Now we replace only the current page's data with component that 
         // includes all relevant relationships to avoid loading unneeded
         // other pages' data and also decrease our database's workload
@@ -314,14 +325,14 @@ class AccreditationController extends Controller
              ->select('*')
              ->addSelect(\DB::raw("'{$merged[$page - 1]->action_type}' as action_type"))
              ->first();
+
         $currentComponent->accreditation = $accreditation;
 
         $merged->put($page - 1, $currentComponent);
-
         // Finally we simple paginate the data
         $perPage = 1;
         $paginator = $this->simplePaginate($merged, $perPage)->withQueryString();
-
+        
         return new InstrumentComponentCollection($paginator);
     }
 
@@ -400,7 +411,8 @@ class AccreditationController extends Controller
 
         $accreditation->predicate = $request->get('predicate');
         $accreditation->meeting_date = $request->get('meeting_date');
-        $accreditation->setEvaluated();
+        // $accreditation->setEvaluated();
+        $accreditation->setAccredited();
         $accreditation->setCertificateExpiration();
         $accreditation->save();
 

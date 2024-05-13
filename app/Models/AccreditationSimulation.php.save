@@ -122,8 +122,7 @@ class AccreditationSimulation extends Model
                 $finalResult[$key] += $result[$key];
             }
         }
-
-        $finalResult['predicate'] = $finalResult['score'] >= 60 ? 'Selamat, perpustakaan Anda telah memenuhi Standar Nasional Perpustakaan. Silahkan ajukan akreditasi' : 'Maaf, perpustakaan anda belum memenuhi Standar Nasional Perpustakaan sehingga belum dapat diakreditasi. Silahkan berkonsultasi pada Dinas Perpustakaan Setempat (Kab./Kota atau Provinsi) untuk mendapatkan pembinaan.';
+        $finalResult['predicate'] = $finalResult['score'] >= 60 ? 'Lulus' : 'Tidak Lulus';
 
         return $finalResult;
     }

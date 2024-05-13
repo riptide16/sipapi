@@ -46,4 +46,15 @@ class StorageController extends Controller
 
         return new ErrorResource(__('errors.file_not_found'), 404);
     }
+
+    public function showCertificateFile(Request $request, $path)
+    {
+        $fullPath = "certifications/{$path}";
+        $storage = Storage::disk('local');
+        if ($storage->exists($fullPath)) {
+            return $storage->download($fullPath);
+        }
+
+        return new ErrorResource(__('errors.file_not_found'), 404);
+    }
 }

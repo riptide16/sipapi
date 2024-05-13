@@ -126,7 +126,9 @@ class InstrumentComponent extends Model
                             if ($accreditationId) {
                                 $withs['accreditationContents'] = function ($query) use ($accreditationId) {
                                     $query->where('accreditation_id', $accreditationId);
-                                    $query->with('evaluationContent');
+                                    $query->with(array('evaluationContent' => function($query) {
+                                        $query->orderBy('updated_at', 'DESC');
+                                    }));
                                 };
                             }
 
@@ -151,7 +153,9 @@ class InstrumentComponent extends Model
                                     if ($accreditationId) {
                                         $withs['accreditationContents'] = function ($query) use ($accreditationId) {
                                             $query->where('accreditation_id', $accreditationId);
-                                            $query->with('evaluationContent');
+                                            $query->with(array('evaluationContent' => function($query) {
+                                                $query->orderBy('updated_at', 'DESC');
+                                            }));
                                         };
                                     }
 

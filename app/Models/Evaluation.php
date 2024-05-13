@@ -73,7 +73,7 @@ class Evaluation extends Model
                 ->join('accreditation_contents AS ac', 'ec.accreditation_content_id', 'ac.id')
                 ->join('instrument_aspects AS ia', 'ac.aspectable_id', 'ia.id')
                 ->join('instrument_components AS ic', 'ia.instrument_component_id', 'ic.id')
-                ->where('ec.evaluation_id', $this->id)
+                ->where('ac.accreditation_id', $this->accreditation_id)
                 ->where('ac.main_component_id', $comp->main_component_id)
                 ->whereNull('ia.deleted_at')
                 ->select(\DB::raw("COUNT(ec.id) as jml_soal, SUM(ec.value) as total, COUNT(ec.id) * 5 as jml_skor"))

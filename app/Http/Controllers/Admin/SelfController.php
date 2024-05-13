@@ -105,7 +105,6 @@ class SelfController extends Controller
     public function indexMenus(Request $request)
     {
         $user = $request->user();
-	
         $menus = Menu::whereHas('permissions', function ($query) use ($user) {
             $query->whereIn('id', $user->role->permissions->pluck('id')->toArray());
         })->sort()->get();
@@ -191,9 +190,16 @@ class SelfController extends Controller
                                         ->take(1)
                                         ->get()
                                         ->collect();
-
+            $gdrive = InstrumentComponent::where('category', $user->institution->category)
+                                        ->where('type', 'main')
+                                        ->select('*')
+                                        ->addSelect(\DB::raw("'gdrive' as action_type"))
+					->take(1)
+                                        ->get()
+                                        ->collect();
+            
             // Merge both type
-            $merged = $choice->merge($proof)->merge($video);
+            $merged = $choice->merge($proof)->merge($gdrive)->merge($video);
         } else {
             $merged = InstrumentComponent::where('category', $user->institution->category)
                                         ->where('type', 'main')

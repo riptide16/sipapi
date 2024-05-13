@@ -152,6 +152,13 @@ Route::prefix('v1')->group(function () {
                 ->middleware('permit_any:read_accreditations');
         });
 
+        Route::prefix('instrument')->name('instrument.')->group(function () {
+           Route::prefix('{instrument}')->group(function () {
+               Route::get('/', [Admin\InstrumentController::class, 'countInstrument'])
+                    ->name('count_instrument');
+           });
+        });
+
         Route::apiResource('accreditation_simulations', Admin\AccreditationSimulationController::class, ['only' => ['store']])
              ->middleware('permit:crud=self_assessments');
         Route::prefix('accreditation_simulations')->name('accreditation_simulations.')->group(function () {
@@ -173,6 +180,9 @@ Route::prefix('v1')->group(function () {
                 Route::get('/', [Admin\EvaluationController::class, 'show'])
                      ->middleware('permit:browse_evaluations')
                      ->name('show');
+                Route::get('show_institution', [Admin\EvaluationController::class, 'showInstitution'])
+                     ->middleware('permit:browse_evaluations')
+                     ->name('show_institution');
             });
             Route::post('/', [Admin\EvaluationController::class, 'store'])
                  ->name('store')
@@ -186,7 +196,7 @@ Route::prefix('v1')->group(function () {
         Route::prefix('certifications')->name('certifications.')->group(function () {
           Route::post('/', [Admin\CertificationController::class, 'update'])->name('certification.update');
         });
-        
+
         Route::prefix('province_region')->name('province_region.')->group(function () {
             Route::get('/region/{region_id}', [Admin\ProvinceRegionController::class, 'index'])
                ->name('available');
@@ -228,6 +238,12 @@ Route::prefix('v1')->group(function () {
                  ->name('total_accredited_libraries_by_provinces_per_year')
                  ->middleware('permit:browse_reports');
         });
+
+        //Export
+        Route::prefix('exports')->name('export.')->group(function () {
+            Route::get('export_onthespot', [Admin\EvaluationController::class, 'exportOnthespot'])
+                 ->name('export_onthespot');
+        }); 
 
         // Self
         Route::prefix('self')->name('self.')->group(function () {
@@ -307,5 +323,9 @@ Route::prefix('v1')->group(function () {
         Route::get('{path}', [Controllers\StorageController::class, 'showFile'])
              ->where('path', '.*')
              ->name('file');
+        Route::get('certifications/{path}', [Controllers\StorageController::class, 'showCertificateFile'])
+             ->where('path', '.*')
+             ->middleware('auth:api')
+             ->name('certification');
     });
 });

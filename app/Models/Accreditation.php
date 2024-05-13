@@ -57,6 +57,8 @@ class Accreditation extends Model
         'predicate',
         'accredited_at',
         'certificate_status',
+        'certificate_file',
+        'recommendation_file',
         'certificate_sent_at',
         'certificate_expires_at',
         'meeting_date',

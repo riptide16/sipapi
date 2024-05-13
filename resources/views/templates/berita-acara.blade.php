@@ -1,5 +1,7 @@
+<!DOCTYPE html>
 <html>
 <head>
+    <title>Berita Acara</title>
     <style>
         body {
         }
@@ -43,18 +45,15 @@
     <table class="pseudo-table">
         <tr>
             <td style="padding-right: 5px">Nama Perpustakaan</td>
-            <td>: {{ $evaluation->institution->library_name }}</td>
+            <td>: {{ $data['accreditationData']->institution->library_name }}</td>
         </tr>
         <tr>
             <td style="padding-right: 5px">Alamat</td>
-            <td>: {{ $evaluation->institution->address }}</td>
+            <td>: {{ $data['accreditationData']->institution->address }}</td>
         </tr>
         <tr>
-            @php
-                $today = now()->format('d F Y');
-            @endphp
             <td style="padding-right: 5px">Waktu Penilaian</td>
-            <td>: {{ $today }}</td>
+            <td>: {{ $data['assignmentData']['scheduled_date'] }}</td>
         </tr>
     </table>
 
@@ -69,7 +68,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($evaluationResult as $item)
+            @foreach ($data['accreditationData']['evaluationResult'] as $item)
                 <tr>
                     <td class="center">{{ $loop->iteration }}</td>
                     <td class="left-space">{{ $item['instrument_component'] }}</td>
@@ -82,23 +81,48 @@
             <tr>
                 <td></td>
                 <td class="left-space"><b>Jumlah</b></td>
-                <td class="center"><b>{{ $evaluation->finalResult['weight'] }}</b></td>
-                <td class="center"><b>{{ round($evaluation->finalResult['score'], 2) }}</b></td>
+                <td class="center"><b>{{ $data['accreditationData']['finalResult']['weight'] }}</b></td>
+                <td class="center"><b>{{ round($data['accreditationData']['finalResult']['score'], 2) }}</b></td>
             </tr>
         </tfoot>
     </table>
 
     <p>Rekomendasi</p>
-    @foreach ($evaluation->recommendations as $recommendation)
-        <div class="recommendation">
-            <div class="name"><b>{{ $recommendation['name'] }}</b></div>
-            <div class="content">{{ $recommendation['content'] }}</div>
-        </div>
+    @foreach ($data['recommendations'] as $recommendation)
+    <h3>{{ $recommendation['name'] }}</h3>
+    <table class="table-border">
+        <tbody>
+            <tr>
+                <td>a.</td>
+                <td>Bobot Nilai</td>
+                <td>{{ $recommendation['weight'] }}</td>
+            </tr>
+            <tr>
+                <td>b.</td>
+                <td>Hasil Visitasi</td>
+                <td>{{ $recommendation['score'] }}</td>
+            </tr>
+            <tr>
+                <td>c.</td>
+                <td>Capaian Perpustakaan</td>
+                <td>{{ $recommendation['percentage'] }}</td>
+            </tr>
+            <tr>
+                <td>d.</td>
+                <td>Saran</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="2">{{ $recommendation['content'] }}</td>
+            </tr>
+        </tbody>
+    </table>
     @endforeach
-
+    
     <p>
         Merujuk hasil visitasi perpustakaan, maka kami dari pihak perpustakaan yang diakreditasi menyatakan 
-        PERSETUJUAN terhadap hasil visitasi perpustakaan tersebut untuk dijadikan bahan penentuan penilaian
+        PERSETUJUAN terhadap hasil visitasi perpustakaan dan rekomendasi tersebut untuk dijadikan bahan penentuan penilaian
         akreditasi oleh Perpustakaan Nasional RI terhadap perpustakaan kami.
     </p>
 
@@ -113,27 +137,27 @@
         <tbody>
             <tr>
                 <td rowspan="4" class="v-align-top left-space">
-                    {{ $evaluation->institution->library_name }}<br />TTD
+                    {{ $data['accreditationData']->institution->library_name }}<br />TTD
                 </td>
             </tr>
             <tr>
                 <td class="v-align-top asesor-ttd left-space">
-                    @if (isset($assignment->assessors[0]))
-                        Asesor ke-1<br />{{ $assignment->assessors[0]->name }}<br />TTD
+                    @if (isset($data['assignmentData']->assessors[0]))
+                        Asesor ke-1<br />{{ $data['assignmentData']->assessors[0]->name }}<br />TTD
                     @endif
                 </td>
             </tr>
             <tr>
                 <td class="v-align-top asesor-ttd left-space">
-                    @if (isset($assignment->assessors[1]))
-                        Asesor ke-2<br />{{ $assignment->assessors[1]->name }}<br />TTD
+                    @if (isset($data['assignmentData']->assessors[1]))
+                        Asesor ke-2<br />{{ $data['assignmentData']->assessors[1]->name }}<br />TTD
                     @endif
                 </td>
             </tr>
             <tr>
                 <td class="v-align-top asesor-ttd left-space">
-                    @if (isset($assignment->assessors[2]))
-                        Asesor ke-3<br />{{ $assignment->assessors[2]->name }}<br />TTD
+                    @if (isset($data['assignmentData']->assessors[2]))
+                        Asesor ke-3<br />{{ $data['assignmentData']->assessors[2]->name }}<br />TTD
                     @endif
                 </td>
             </tr>

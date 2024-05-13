@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Instrument;
+use App\Models\InstrumentAspect;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\InstrumentCollection;
 use App\Http\Resources\InstrumentResource;
@@ -36,5 +37,16 @@ class InstrumentController extends Controller
         $instrument = Instrument::findOrFail($id);
 
         return new InstrumentResource($instrument);
+    }
+
+    public function countInstrument($category)
+    {
+        $instrument = Instrument::where("category", $category)->get();
+        $countInstrument = InstrumentAspect::where("instrument_id",$instrument[0]["id"])
+                                ->where('type',"!=","proof")
+                                ->whereNull("parent_id")
+                                ->count();
+
+        return $countInstrument;
     }
 }
