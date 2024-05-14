@@ -44,6 +44,8 @@ class User extends Authenticatable implements
         'password',
         'role_id',
         'status',
+        'email_verified_at',
+        'activated_at',
         'region_id',
         'profile_picture',
         'phone_number',

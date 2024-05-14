@@ -18,11 +18,15 @@ class RegisterController extends Controller
         $user = User::create(array_merge(
             $request->all(),
             [
-                'role_id' => $role->id
+                'role_id' => $role->id,
+                'status' => 'active',
+                'email_verified_at' => now(),
+                'activated_at' => now(),
             ],
         ));
+        return $user;
 
-        event(new Registered($user));
+        //event(new Registered($user));
 
         return new UserResource($user, 201);
     }
