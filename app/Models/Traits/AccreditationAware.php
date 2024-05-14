@@ -32,7 +32,7 @@ trait AccreditationAware
     {
         $year = now()->format('Y');
         $last = self::where('code', 'like', "{$year}/%")
-                    ->select(\DB::raw("CAST(REPLACE(code, '{$year}/', '') AS INTEGER) AS iteration"))
+                    ->select(\DB::raw("CAST(REPLACE(code, '{$year}/', '') AS UNSIGNED) AS iteration"))
                     ->orderBy('iteration', 'desc')
                     ->first();
 

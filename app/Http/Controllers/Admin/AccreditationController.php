@@ -96,6 +96,7 @@ class AccreditationController extends Controller
             'user_id' => $user->id,
             'status' => Accreditation::STATUS_INCOMPLETE,
         ]);
+         
         if (!$accreditation->exists) {
             \DB::transaction(function () use ($accreditation, $type) {
                 $accreditation->fill([
