@@ -24,7 +24,6 @@ class RegisterController extends Controller
                 'activated_at' => now(),
             ],
         ));
-        return $user;
 
         //event(new Registered($user));
 
