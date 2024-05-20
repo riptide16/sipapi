@@ -173,6 +173,9 @@ Route::prefix('v1')->group(function () {
                 Route::get('/', [Admin\EvaluationController::class, 'show'])
                      ->middleware('permit:browse_evaluations')
                      ->name('show');
+               Route::get('show_institution', [Admin\EvaluationController::class, 'showInstitution'])
+                     ->middleware('permit:browse_evaluations')
+                     ->name('show_institution');
             });
             Route::post('/', [Admin\EvaluationController::class, 'store'])
                  ->name('store')

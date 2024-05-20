@@ -2,6 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use DB;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\AccreditationCollection;
+use App\Http\Resources\AccreditationResource;
+use App\Http\Resources\EvaluationCollection;
+use App\Http\Resources\EvaluationAssignmentCollection;
+use App\Http\Resources\EvaluationResource;
+use App\Http\Resources\ErrorResource;
+use App\Http\Resources\InstitutionResource;
+use App\Http\Requests\Admin\SubmitEvaluationRequest;
 use App\Events\AccreditationEvaluated;
 use App\Models\Accreditation;
 use App\Models\AccreditationContent;
@@ -11,12 +21,7 @@ use App\Models\EvaluationContent;
 use App\Models\InstrumentAspect;
 use App\Models\InstrumentAspectPoint;
 use App\Models\InstrumentComponent;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\AccreditationCollection;
-use App\Http\Resources\EvaluationCollection;
-use App\Http\Resources\EvaluationResource;
-use App\Http\Resources\ErrorResource;
-use App\Http\Requests\Admin\SubmitEvaluationRequest;
+use App\Models\Institution;
 use Illuminate\Http\Request;
 use Storage;
 use PDF;
@@ -185,5 +190,13 @@ class EvaluationController extends Controller
         }
 
         return false;
+    }
+
+    public function showInstitution($id)
+    {
+        $accreditation = Accreditation::findOrFail($id);
+	    $institutionId = $accreditation->institution_id;
+        $institution = Institution::with(['region', 'province', 'city', 'subdistrict', 'village'])->findOrFail($institutionId);
+        return new InstitutionResource($institution);
     }
 }
