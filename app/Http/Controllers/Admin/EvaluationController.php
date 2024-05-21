@@ -115,7 +115,7 @@ class EvaluationController extends Controller
             'file' => 'sometimes|file|max:2048|mimes:pdf,doc,docx',
             'recommendations' => 'array|sometimes',
             'recommendations.*.instrument_component_id' => 'required_with:recommendations|exists:instrument_components,id',
-            'recommendations.*.content' => 'required_with:recommendations|max:255',
+            'recommendations.*.content' => 'required_with:recommendations',
         ]);
 
         if ($request->has('file')) {

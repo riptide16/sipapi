@@ -32,7 +32,7 @@ class UpdateUserRequest extends FormRequest
         $this->user = User::findOrFail($this->route()->parameter('user'));
 
         return [
-            'name' => ['sometimes', new Alphaspace(), 'min:3', 'max:191'],
+            'name' => ['sometimes', new Alphanumericplus(), 'min:3', 'max:191'],
             'username' => [
                 'sometimes',
                 new Alphanumericplus(),

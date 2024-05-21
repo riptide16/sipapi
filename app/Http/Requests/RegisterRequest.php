@@ -31,7 +31,7 @@ class RegisterRequest extends FormRequest
         return [
             'email' => 'required|email|max:191|unique:users',
             'username' => ['required', new Alphanumericplus(), 'min:3', 'max:191', 'unique:users'],
-            'name' => ['required', new Alphaspace(), 'min:3', 'max:191'],
+            'name' => ['required', new Alphanumericplus, 'min:3', 'max:191'],
             'password' => ['required', 'max:191', 'confirmed', Password::min(8)],
             'role_name' => ['required', Rule::in([Role::ASSESSOR, Role::ASSESSEE])],
             'institution_name' => 'required_if:role_name,'.Role::ASSESSOR,
