@@ -50,7 +50,7 @@ class SelfController extends Controller
     public function updateProfile(Request $request)
     {
         $request->validate([
-            'name' => ['sometimes', new Alphanumericplus(), 'max:191'],
+            'name' => ['sometimes', 'max:191'],
             'email' => [
                 'sometimes',
                 'email',
