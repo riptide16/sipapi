@@ -21,6 +21,7 @@ class CertificationController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+
         if ($user->isAssessee()){
             $accreditations = Accreditation::with(['institution', 'evaluation'])->where('user_id', $user->id)->accredited()->get();
         }
@@ -38,7 +39,7 @@ class CertificationController extends Controller
             })->accredited()->get();
         }
 
-        return new AccreditationCollection($accreditations);
+        return $accreditations;
     }
 
     public function show($accreditationId)
