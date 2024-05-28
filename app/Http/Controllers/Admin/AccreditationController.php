@@ -408,7 +408,7 @@ class AccreditationController extends Controller
 
         $accreditation->predicate = $request->get('predicate');
         $accreditation->meeting_date = $request->get('meeting_date');
-        $accreditation->setEvaluated();
+        $accreditation->setAccredited();
         $accreditation->setCertificateExpiration();
         $accreditation->save();
 
