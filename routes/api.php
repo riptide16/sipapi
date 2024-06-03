@@ -152,6 +152,13 @@ Route::prefix('v1')->group(function () {
                 ->middleware('permit_any:read_accreditations');
         });
 
+        Route::prefix('instrument')->name('instrument.')->group(function () {
+          Route::prefix('{instrument}')->group(function () {
+              Route::get('/', [Admin\InstrumentController::class, 'countInstrument'])
+                   ->name('count_instrument');
+          });
+       });
+
         Route::apiResource('accreditation_simulations', Admin\AccreditationSimulationController::class, ['only' => ['store']])
              ->middleware('permit:crud=self_assessments');
         Route::prefix('accreditation_simulations')->name('accreditation_simulations.')->group(function () {
