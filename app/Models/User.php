@@ -166,6 +166,15 @@ class User extends Authenticatable implements
         return $this->role->isSuperAdmin();
     }
 
+    public function isCertificateAdmin()
+    {
+        if (!$this->role) {
+            return false;
+        }
+
+        return $this->role->isCertificateAdmin();
+    }
+
     public function isAdmin()
     {
         if (!$this->role) {

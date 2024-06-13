@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Role extends Model
 {
     public const SUPER_ADMIN = 'super_admin';
+    public const CERTIFICATE_ADMIN = 'sertifikat';
     public const ADMIN = 'admin';
     public const ASSESSOR = 'asesor';
     public const ASSESSEE = 'asesi';
@@ -47,6 +48,11 @@ class Role extends Model
     public function isSuperAdmin()
     {
         return $this->name === static::SUPER_ADMIN;
+    }
+
+    public function isCertificateAdmin()
+    {
+        return $this->name === static::CERTIFICATE_ADMIN;
     }
     
     public function isAdmin()

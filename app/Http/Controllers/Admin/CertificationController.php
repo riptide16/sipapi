@@ -25,7 +25,7 @@ class CertificationController extends Controller
         if ($user->isAssessee()){
             $accreditations = Accreditation::with(['institution', 'evaluation'])->where('user_id', $user->id)->accredited()->get();
         }
-        else if($user->isSuperAdmin()){
+        else if($user->isSuperAdmin() ||  $user->isCertificateAdmin()){
             $accreditations = Accreditation::with(['institution', 'evaluation'])->accredited()->get();
         }
         else if($user->isProvince()){
